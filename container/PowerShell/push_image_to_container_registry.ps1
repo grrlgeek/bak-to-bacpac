@@ -2,7 +2,7 @@
 
 $RGName = 'sqlcontainers' 
 $ACRName = 'acrsqlcontainers'
-$ACRPath = 'sql/mdf-bacpac:latest'
+$ACRPath = 'sql/bak-bacpac:latest'
 
 # Log in to registry 
 $ACRNameObj = Get-AzContainerRegistry -ResourceGroupName $RGName -Name $ACRName

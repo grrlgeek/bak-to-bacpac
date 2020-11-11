@@ -2,7 +2,7 @@
 
 $RGName = 'sqlcontainers' 
 $Location = 'eastus'
-$KVName = 'kvsqlcontainers20201012'
+$KVName = 'kvsqlcontainers'
 
 $KVExists = Get-AzKeyVault -ResourceGroupName $RGName -VaultName $KVName -ErrorAction SilentlyContinue
 if ($KVExists -eq $null) 
