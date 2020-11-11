@@ -2,11 +2,11 @@
 
 $RGName = 'sqlcontainers' 
 $Location = 'eastus'
-$SqlServerName = 'customerdbsfrommdf'
+$SqlServerName = 'customerdbsfrombak'
 $SqlAdminUser = 'sql-admin'
 $SqlAdminPass = Read-Host -Prompt "Please enter an administrator password:" | ConvertTo-SecureString -AsPlainText -Force 
 $SqlAdminCred = New-Object System.Management.Automation.PSCredential($SqlAdminUser, $SqlAdminPass)
-$KVName = 'kvsqlcontainers20201012'
+$KVName = 'kvsqlcontainers'
 
 $SQLExists = Get-AzSqlServer -ResourceGroupName $RGName -ServerName $SqlServerName -ErrorAction SilentlyContinue
 if ($SQLExists -eq $null) 

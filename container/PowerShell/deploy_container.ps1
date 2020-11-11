@@ -2,20 +2,19 @@
 
 $SA_PASSWORD = Read-Host -Prompt "Please enter the SA password:"
 $RGName = 'sqlcontainers' 
-$KVName = 'kvsqlcontainers20201026'
-$ContainerGroupName = 'aci-sql-mdf-bacpac'
+$KVName = 'kvsqlcontainers'
+$ContainerGroupName = 'aci-sql-bak-bacpac'
 $ACRName = 'acrsqlcontainers'
 $ACRLoginServer = (Get-AzContainerRegistry -ResourceGroupName $RGName -Name $ACRName).LoginServer 
 $ACRUser = (Get-AzKeyVaultSecret -VaultName $KVName  -Name 'acr-pull-user').SecretValueText 
-$ACRPass = (Get-AzKeyVaultSecret -VaultName $KVName -Name 'acr-pull-pass').Secre 6yutValue 
+$ACRPass = (Get-AzKeyVaultSecret -VaultName $KVName -Name 'acr-pull-pass').SecretValue 
 $ACRCred = New-Object System.Management.Automation.PSCredential ($ACRUser, $ACRPass) 
-$ACRPath = 'sql/mdf-bacpac:latest'
-# $EnvVariables = @{ ACCEPT_EULA="Y"; SA_PASSWORD=""; MSSQL_PID="Enterprise";}
+$ACRPath = 'sql/bak-bacpac:latest'
 $EnvVariables = @{ ACCEPT_EULA="Y"; SA_PASSWORD=$SA_PASSWORD; MSSQL_PID="Enterprise";}
-$StorageAcctName = 'customersqlmdfs'
+$StorageAcctName = 'customersqlbaks'
 $StorageAcctKey = (Get-AzStorageAccountKey -ResourceGroupName $RGName -Name $StorageAcctName)[0].Value | ConvertTo-SecureString -AsPlainText -Force 
 $StorageAcctCred = New-Object System.Management.Automation.PSCredential($StorageAcctName, $StorageAcctKey)
-$StorageAcctFileShareName = 'mdfs'
+$StorageAcctFileShareName = 'baks'
 $VolumeMountPath  = '/mnt/external'
 
 # Run 

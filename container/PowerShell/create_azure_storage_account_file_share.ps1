@@ -2,9 +2,9 @@
 
 $RGName = 'sqlcontainers' 
 $Location = 'eastus'
-$StorageAccountName = 'customersqlmdfs' # must be unique across Azure
-$ShareName = 'mdfs'
-$KVName = 'kvsqlcontainers20201012'
+$StorageAccountName = 'customersqlbaks' # must be unique across Azure
+$ShareName = 'baks'
+$KVName = 'kvsqlcontainers'
 
 $StorageAccountCredentials = SetupStorage `
     -StorageResourceGroupName $RGName `

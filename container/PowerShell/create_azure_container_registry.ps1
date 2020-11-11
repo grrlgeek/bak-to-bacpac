@@ -3,7 +3,7 @@
 $RGName = 'sqlcontainers' 
 $Location = 'eastus'
 $ACRName = 'acrsqlcontainers'
-$KVName = 'kvsqlcontainers20201012'
+$KVName = 'kvsqlcontainers'
 
 $ACRExists = Get-AzContainerRegistry -ResourceGroupName $RGName -Name $ACRName -ErrorAction SilentlyContinue
 if ($ACRExists -eq $null)

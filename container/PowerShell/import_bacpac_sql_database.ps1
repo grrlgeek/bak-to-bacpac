@@ -1,23 +1,22 @@
 # Import .bacpac from File Share to Azure SQL Database
 
 $RGName = 'sqlcontainers'
-$KVName = 'kvsqlcontainers20201026'
-$StorageAcctName = 'customersqlmdfs'
+$KVName = 'kvsqlcontainers'
+$StorageAcctName = 'customersqlbaks'
 $StorageAcctKey = (Get-AzStorageAccountKey -ResourceGroupName $RGName -Name $StorageAcctName)[0].Value 
-$StorageAcctFileShareName = 'mdfs'
+$StorageAcctFileShareName = 'baks'
 $StorageContext = (Get-AzStorageAccount -ResourceGroupName $RGName -Name $StorageAcctName).Context
 $StorageFileShareObj = Get-AzStorageFile -ShareName $StorageAcctFileShareName -Context $StorageContext
 $Filtered = $StorageFileShareObj | Where-Object {$_.name -like '*.bacpac'}
 $FileName = $Filtered.Name
 $SASToken = New-AzStorageAccountSASToken -Service Blob,File,Table,Queue -ResourceType Service,Container,Object -Permission "racwdlup" -Context $StorageContext
-#$StorageUriFileShare = "https://$StorageAcctName.file.core.windows.net/$StorageAcctFileShareName/$FileName"
 $StorageUriFileShareSAS = "https://$StorageAcctName.file.core.windows.net/$StorageAcctFileShareName/$FileName$SASToken"
 $StorageUriBlob = "https://$StorageAcctName.blob.core.windows.net/$StorageAcctFileShareName/$FileName"
 $StorageUriBlobSAS = "https://$StorageAcctName.blob.core.windows.net/$StorageAcctFileShareName/$FileName$SASToken"
-$SqlServerName = 'customerdbsfrommdf'
+$SqlServerName = 'customerdbsfrombak'
 $SqlAdminUser = (Get-AzSqlServer -ResourceGroup $RGName -Name $SqlServerName).SqlAdministratorLogin
 $SqlAdminPass =  (Get-AzKeyVaultSecret -VaultName $KVName -Name "$SqlServerName-admin").SecretValue 
-$SQLDB = 'importedmdf'
+$SQLDB = 'importedbak'
 $sqlEdition = 'BusinessCritical'
 $sqlSLO = 'BC_Gen5_2'
 
