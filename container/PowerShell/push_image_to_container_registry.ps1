@@ -13,7 +13,7 @@ $ACRCred.Password | docker login $ACRNameObj.LoginServer --username $ACRCred.Use
 
 # Tag image 
 $ImagePath = $ACRNameObj.LoginServer + '/' + $ACRPath
-docker tag mssql-mdf-bacpac $ImagePath
+docker tag mssql-bak-bacpac $ImagePath
 
 # Push image to repository 
 docker push $ImagePath
