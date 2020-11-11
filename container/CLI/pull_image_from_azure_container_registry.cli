@@ -1,2 +1,0 @@
-# Pull image from registry 
-docker pull jackjack.azurecr.io/sql/mdf-bacpac
