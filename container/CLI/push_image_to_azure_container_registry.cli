@@ -1,0 +1,13 @@
+## Steps to push this image to the Azure Container Registry 
+
+### Login - https://docs.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest#az-acr-login 
+az acr login --name acrcontainerdemo
+
+### Run to show local images 
+docker image ls 
+
+### Tag image to private registry 
+docker tag mssql-mdf-bacpac acrcontainerdemo.azurecr.io/sql/mdf-bacpac:latest
+
+### Push to registry 
+docker push acrcontainerdemo.azurecr.io/sql/mdf-bacpac:latest

@@ -1,0 +1,6 @@
+# Create Azure Key Vault
+$RES_GROUP="rg-containerformdf"
+$ACR_NAME="jackjack"  
+$AKV_NAME="jackjackkeys"
+
+az keyvault create -g $RES_GROUP -n $AKV_NAME
