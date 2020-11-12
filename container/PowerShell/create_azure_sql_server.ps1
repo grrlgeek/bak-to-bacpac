@@ -28,33 +28,30 @@ else {
     Write-Host "SQL server ($SqlServerName) exists."
 }
 
-# Create firewall rule for Azure resources 
+# Create firewall rule for Azure resources
 
 $AzSqlServerFirewallRuleParams = @(
-    ResourceGroupName =  $RGName 
-    ServerName =  $SqlServerName 
+    ResourceGroupName =  $RGName
+    ServerName =  $SqlServerName
     AllowAllAzureIPs = $true
 )
 New-AzSqlServerFirewallRule @AzSqlServerFirewallRuleParams
 
-# Store SQL server admin password in Key Vault 
-$SecretName = "$SqlServerName-admin" 
+# Store SQL server admin password in Key Vault
+$SecretName = "$SqlServerName-admin"
 $SecretValueSecure = $SqlAdminPass
 
-$SecretExists = Get-AzKeyVaultSecret -VaultName $KVName -Name $SecretName 
-if ($SecretExists -eq $null) {
-    Set-AzKeyVaultSecret `
-        -VaultName $KVName `
-        -Name $SecretName `
-        -SecretValue $SecretValueSecure
-        
-    Write-Host "Secret ($SecretName) created."
+    $AzSecretParams = @{
+    VaultName   = $KVName
+    Name        = $SecretName
+    SecretValue = $SecretValueSecure
 }
-else {
-    Write-Host "Secret ($SecretName) exists."
-}
+Set-AzKeyVaultSecret @AzSecretParams
+
+Write-Host "Secret ($SecretName) created or updated."
 
 #endregion
+
 <#
 Remove-AzKeyVaultSecret `
     -VaultName $KVName `
