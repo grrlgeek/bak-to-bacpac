@@ -20,19 +20,19 @@ These steps assume you have no resources created in Azure. If you have a resourc
 
 | Step                                          | File                                                                                                     |
 |---------                                      |--------                                                                                                  |
-|Create Dockerfile locally                      | [Dockerfile](Docker/Dockerfile)                                                                          |
-|Create image                                   | [create_docker_image.sh](Docker/create_docker_image.sh)                                                  |
-|Create container locally                       | [local_docker_run_command.sh](Docker/local_docker_run_command.sh)                                        |
-|Create Azure Resource Group                    | [create_azure_resource_group.ps1](PowerShell/create_azure_resource_group.ps1)                            |
-|Create Azure Key Vault                         | [create_azure_key_vault.ps1](PowerShell/create_azure_key_vault.ps1)                                      |
-|Create Azure Storage function                  | [create_setupstorage_function.ps1](PowerShell/create_setupstorage_function.ps1)                          |
-|Create Azure Storage File Share                | [create_azure_storage_account_file_share.ps1](PowerShell/create_azure_storage_account_file_share.ps1)    |
-|Create Azure Container Registry                | [create_azure_container_registry.ps1](PowerShell/create_azure_container_registry.ps1)                    |
-|Create Azure SQL server                        | [create_azure_sql_server.ps1](PowerShell/create_azure_sql_server.ps1)                                    |
-|Push image to Azure Container Registry         | [push_image_to_azure_container_registry.ps1](PowerShell/push_image_to_azure_container_registry.ps1)      |
+|Create Dockerfile locally                      | [Dockerfile](/container/Docker/Dockerfile)                                                                          |
+|Create image                                   | [create_docker_image.sh](/container/Docker/create_docker_image.sh)                                                  |
+|Create container locally                       | [local_docker_run_command.sh](/container/Docker/local_docker_run_command.sh)                                        |
+|Create Azure Resource Group                    | [create_azure_resource_group.ps1](/container/PowerShell/create_azure_resource_group.ps1)                            |
+|Create Azure Key Vault                         | [create_azure_key_vault.ps1](/container/PowerShell/create_azure_key_vault.ps1)                                      |
+|Create Azure Storage function                  | [create_setupstorage_function.ps1](/container/PowerShell/create_setupstorage_function.ps1)                          |
+|Create Azure Storage File Share                | [create_azure_storage_account_file_share.ps1](/container/PowerShell/create_azure_storage_account_file_share.ps1)    |
+|Create Azure Container Registry                | [create_azure_container_registry.ps1](/container/PowerShell/create_azure_container_registry.ps1)                    |
+|Create Azure SQL server                        | [create_azure_sql_server.ps1](/container/PowerShell/create_azure_sql_server.ps1)                                    |
+|Push image to Azure Container Registry         | [push_image_to_azure_container_registry.ps1](/container/PowerShell/push_image_to_azure_container_registry.ps1)      |
 |Upload .bak to File Share                      |                                                                                                          |
-|Create Azure Container Instance                | [deploy_container.ps1](PowerShell/deploy_container.ps1)                                                  |
-|Import .bacpac into SQL Database               | [import_bacpac_sql_database.ps1](PowerShell/import_bacpac_sql_database.ps1)                              |
+|Create Azure Container Instance                | [deploy_container.ps1](/container/PowerShell/deploy_container.ps1)                                                  |
+|Import .bacpac into SQL Database               | [import_bacpac_sql_database.ps1](/container/PowerShell/import_bacpac_sql_database.ps1)                              |
 
 ## Future Enhancements
 
