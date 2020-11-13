@@ -18,6 +18,10 @@ If you would like a .bak file to test with, go to [AdventureWorks sample databas
 
 These steps assume you have no resources created in Azure. If you have a resource group and a key vault, for example, replace the parameters in the following scripts with your values.
 
+Start by filling in the [variables.ps1](PowerShell/variables.ps1) file with the names that you want to use for the resources that will be created.
+
+
+
 | Step                                          | File                                                                                                     |
 |---------                                      |--------                                                                                                  |
 |Create Dockerfile locally                      | [Dockerfile](Docker/Dockerfile)                                                                          |
@@ -30,7 +34,7 @@ These steps assume you have no resources created in Azure. If you have a resourc
 |Create Azure Container Registry                | [create_azure_container_registry.ps1](PowerShell/create_azure_container_registry.ps1)                    |
 |Create Azure SQL server                        | [create_azure_sql_server.ps1](PowerShell/create_azure_sql_server.ps1)                                    |
 |Push image to Azure Container Registry         | [push_image_to_azure_container_registry.ps1](PowerShell/push_image_to_azure_container_registry.ps1)      |
-|Upload .bak to File Share                      |                                                                                                          |
+|Upload .bak to File Share                      |[upload_baks_to_file_share.ps1](PowerShell/upload_baks_to_file_share.ps1)|                                                                                                          |
 |Create Azure Container Instance                | [deploy_container.ps1](PowerShell/deploy_container.ps1)                                                  |
 |Import .bacpac into SQL Database               | [import_bacpac_sql_database.ps1](PowerShell/import_bacpac_sql_database.ps1)                              |
 
