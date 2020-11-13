@@ -14,6 +14,15 @@ if (-not (Get-AzSqlServer -ResourceGroupName $RGName -ServerName $SqlServerName 
         Location                    = $Location
         SqlAdministratorCredentials = $SqlAdminCred
     }
+    New-AzSqlServer @$AzSQLServerParams
+
+    Write-Host "SQL server ($SqlServerName) created."
+}
+else {
+    Write-Host "SQL server ($SqlServerName) exists."
+}
+
+# Create firewall rule for Azure resources
 
     New-AzSqlServer @AzSQlParams
 
@@ -32,8 +41,8 @@ $SqlFWRuleParams = @{
 
 New-AzSqlServerFirewallRule @SqlFWRuleParams
 
-# Store SQL server admin password in Key Vault 
-$SecretName = "$SqlServerName-admin" 
+# Store SQL server admin password in Key Vault
+$SecretName = "$SqlServerName-admin"
 $SecretValueSecure = $SqlAdminPass
 
 $SetAzSecretParams = @{
