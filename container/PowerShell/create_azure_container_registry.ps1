@@ -1,68 +1,52 @@
-# Create Azure Container Registry 
+# Create Azure Container Registry
 
-$RGName = 'sqlcontainers' 
-$Location = 'eastus'
-$ACRName = 'acrsqlcontainers'
-$KVName = 'kvsqlcontainers'
+# Load Variables
 
-$ACRExists = Get-AzContainerRegistry -ResourceGroupName $RGName -Name $ACRName -ErrorAction SilentlyContinue
-if ($ACRExists -eq $null)
-    {
-        New-AzContainerRegistry `
-            -ResourceGroupName $RGName `
-            -Name $ACRName `
-            -Location $Location `
-            -Sku "Basic" `
-            -EnableAdminUser
+. .\container\PowerShell\variables.ps1
 
-        Write-Host "Container registry ($ACRName) created."
+if (-not(Get-AzContainerRegistry -ResourceGroupName $RGName -Name $ACRName -ErrorAction SilentlyContinue)) {
+
+    $AzContainerRegistryParams = @{
+        ResourceGroupName = $RGName
+        Name              = $ACRName
+        Location          = $Location
+        Sku               = "Basic"
+        EnableAdminUser   = $true
     }
-else 
-    {
-        Write-Host "Container registry ($ACRName) exists."
-    }
-
-# Store admin username and password in Key Vault 
-# Container registry admin username 
-$SecretName = 'acr-pull-user' 
-$SecretValue = (Get-AzContainerRegistryCredential -ResourceGroupName $RGName -Name $ACRName).Username 
-$SecretValueSecure = ConvertTo-SecureString -String $SecretValue -AsPlainText -Force
-
-$SecretExists = Get-AzKeyVaultSecret -VaultName $KVName -Name $SecretName 
-if ($SecretExists -eq $null)
-    {
-        Set-AzKeyVaultSecret `
-            -VaultName $KVName `
-            -Name $SecretName `
-            -SecretValue $SecretValueSecure
-        
-        Write-Host "Secret ($SecretName) created."
-    }
-else 
-{
-    Write-Host "Secret ($SecretName) exists."
+    New-AzContainerRegistry @AzContainerRegistryParams
+    Write-Host "Container registry ($ACRName) created."
+}else {
+    Write-Host "Container registry ($ACRName) exists."
 }
 
+# Store admin username and password in Key Vault
+# Container registry admin username
+
+$SecretValue = (Get-AzContainerRegistryCredential -ResourceGroupName $RGName -Name $ACRName).Username
+$SecretValueSecure = ConvertTo-SecureString -String $SecretValue -AsPlainText -Force
+
+$SetAzKVSecret = @{
+    VaultName   = $KVName
+    Name        = $AcrUserSecretName
+    SecretValue = $SecretValueSecure
+}
+Set-AzKeyVaultSecret @SetAzKVSecret
+
+Write-Host "Secret ($SecretName) created or updated"
 
 # Container registry admin password 
-$SecretName = 'acr-pull-pass' 
+
 $SecretValue = (Get-AzContainerRegistryCredential -ResourceGroupName $RGName -Name $ACRName).Password
 $SecretValueSecure = ConvertTo-SecureString -String $SecretValue -AsPlainText -Force
 
-$SecretExists = Get-AzKeyVaultSecret -VaultName $KVName -Name $SecretName 
-if ($SecretExists -eq $null)
-    {
-        Set-AzKeyVaultSecret `
-            -VaultName $KVName `
-            -Name $SecretName `
-            -SecretValue $SecretValueSecure
-        
-        Write-Host "Secret ($SecretName) created."
-    }
-else 
-{
-    Write-Host "Secret ($SecretName) exists."
+$SetAzKVSecretParams = @{
+    VaultName   = $KVName
+    Name        = $AcrPassSecretName
+    SecretValue = $SecretValueSecure
 }
+
+Set-AzKeyVaultSecret @SetAzKVSecretParams
+Write-Host "Secret ($SecretName) created or updated."
 
 <# 
 # Clean up 

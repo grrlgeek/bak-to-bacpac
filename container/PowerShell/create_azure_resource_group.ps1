@@ -1,25 +1,27 @@
-# Get current subscription 
-$AZContext = Get-AzContext
+# Connect to Azure
+
+Connect-AzAccount
+
+#Get available subscriptions
+Get-AzSubscription
+
+# Set the subscription using the subscription name
+
+$AZContext = Set-AzContext -SubscriptionName 'Microsoft Azure Sponsorship'
 $AZContext.Subscription.Name
 
-# Set subscription to use 
-Set-AzContext -SubscriptionName $AZContext.Subscription.Name
+# Load Variables
 
-# Create Azure Resource Group 
-$RGName = 'sqlcontainers' 
-$Location = 'eastus'
+. .\container\PowerShell\variables.ps1
 
-$RGExists = Get-AzResourceGroup -Name $RGName -ErrorAction SilentlyContinue
-if ($RGExists -eq $null) 
-    {
-        New-AzResourceGroup `
-                -Name $RGName `
-                -Location $Location 
-                
+# Create Azure Resource Group
+
+if (-not (Get-AzResourceGroup -Name $RGName -ErrorAction SilentlyContinue)) {
+
+        New-AzResourceGroup -Name $RGName -Location $Location     
         Write-Host "Resource group ($RGName) created."
-    }
-else 
-    {
+
+    } else {
         Write-Host "Resource group ($RGName) exists."
     }
 

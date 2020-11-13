@@ -1,27 +1,29 @@
-# Create Azure Key Vault to store secrets. 
+# Create Azure Key Vault to store secrets.
 
-$RGName = 'sqlcontainers' 
-$Location = 'eastus'
-$KVName = 'kvsqlcontainers'
+# Load Variables
 
-$KVExists = Get-AzKeyVault -ResourceGroupName $RGName -VaultName $KVName -ErrorAction SilentlyContinue
-if ($KVExists -eq $null) 
-    {
-        New-AzKeyVault `
-            -Name $KVName `
-            -ResourceGroupName $RGName `
-            -Location $Location 
+. .\container\PowerShell\variables.ps1
 
-        Write-Host "Key Vault ($KVName) created."
+if (-not (Get-AzKeyVault -ResourceGroupName $RGName -VaultName $KVName -ErrorAction SilentlyContinue)) {
+    $AzKVParams = @{
+        Name              = $KVName
+        ResourceGroupName = $RGName
+        Location          = $Location
     }
-else 
-    {
-        Write-Host "Key Vault ($KVName) exists."
-    }
+    New-AzKeyVault @AzKVParams -
+    Write-Host "Key Vault ($KVName) created."
+} else {
+    Write-Host "Key Vault ($KVName) exists."
+}
 
+$SetAzKVAccessPolicy = @{
+    VaultName = $KVName
+    UserPrincipalName = $UserForKeyVault
+    PermissionsToSecrets = 'get','set','delete'
+}
+Set-AzKeyVaultAccessPolicy @SetAzKVAccessPolicy
 # Clean up 
 <#
-Remove-AzKeyVault `
-    -ResourceGroupName $RGName `
-    -VaultName $KVName
+. .\container\PowerShell\variables.ps1
+Remove-AzKeyVault -ResourceGroupName $RGName -VaultName $KVName
 #>
