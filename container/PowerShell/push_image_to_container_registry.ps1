@@ -5,7 +5,7 @@
 . .\container\PowerShell\variables.ps1
 
 # Log in to registry 
-$ACRNameObj = Get-AzContainerRegistry -ResourceGroupName $RGName -Name $ACRName
+$ACRNameObj = Get-AzContainerRegistry -ResourceGroupName $ResourceGroupName -Name $ACRName
 $ACRCred = Get-AzContainerRegistryCredential -Registry $ACRNameObj
 
 # Call docker login, passing in password 

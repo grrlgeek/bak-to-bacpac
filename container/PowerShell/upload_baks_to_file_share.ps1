@@ -4,7 +4,7 @@
 
 $Files = Get-ChildItem $onprembackupdirectory\*.bak
 
-$ctx = (Get-AzStorageAccount -ResourceGroupName $RgName -Name $StorageAccountName).Context
+$ctx = (Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountName).Context
 
 foreach ($file in $files) {
     Write-Host "Uploading $($File.FullName)"

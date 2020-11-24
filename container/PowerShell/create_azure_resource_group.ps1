@@ -16,16 +16,16 @@ $AZContext.Subscription.Name
 
 # Create Azure Resource Group
 
-if (-not (Get-AzResourceGroup -Name $RGName -ErrorAction SilentlyContinue)) {
+if (-not (Get-AzResourceGroup -Name $ResourceGroupName -ErrorAction SilentlyContinue)) {
 
-        New-AzResourceGroup -Name $RGName -Location $Location     
-        Write-Host "Resource group ($RGName) created."
+        New-AzResourceGroup -Name $ResourceGroupName -Location $Location     
+        Write-Host "Resource group ($ResourceGroupName) created."
 
     } else {
-        Write-Host "Resource group ($RGName) exists."
+        Write-Host "Resource group ($ResourceGroupName) exists."
     }
 
 <#
 # Clean up 
-Remove-AzResourceGroup -Name $RGName 
+Remove-AzResourceGroup -Name $ResourceGroupName 
 #>

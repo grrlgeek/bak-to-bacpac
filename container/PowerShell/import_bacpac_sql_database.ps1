@@ -6,10 +6,10 @@
 
 azcopy login --tenant-id $AZContext.Tenant.Id
 
-$SqlAdminUser = (Get-AzSqlServer -ResourceGroup $RGName -Name $SqlServerName).SqlAdministratorLogin
+$SqlAdminUser = (Get-AzSqlServer -ResourceGroup $ResourceGroupName -Name $SqlServerName).SqlAdministratorLogin
 $SqlAdminPass = (Get-AzKeyVaultSecret -VaultName $KVName -Name "$SqlServerName-admin").SecretValue
-$StorageAcctKey = (Get-AzStorageAccountKey -ResourceGroupName $RGName -Name $StorageAccountName)[0].Value 
-$StorageContext = (Get-AzStorageAccount -ResourceGroupName $RGName -Name $StorageAccountName).Context
+$StorageAcctKey = (Get-AzStorageAccountKey -ResourceGroupName $ResourceGroupName -Name $StorageAccountName)[0].Value 
+$StorageContext = (Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountName).Context
 $StorageFileShareObj = Get-AzStorageFile -ShareName $ShareName -Context $StorageContext
 $Filtered = $StorageFileShareObj | Where-Object { $_.name -like '*.bacpac' }
 foreach ($File in $Filtered) {
@@ -35,7 +35,7 @@ $ImportBacPacParams = @{
     StorageUri =  $StorageUriBlob
     AdministratorLogin =  $SqlAdminUser
     AdministratorLoginPassword =  $SqlAdminPass
-    ResourceGroupName =  $RGName
+    ResourceGroupName =  $ResourceGroupName
 }
 $importRequest = New-AzSqlDatabaseImport @ImportBacPacParams
 do {
@@ -57,7 +57,7 @@ $ImportBacPacParams = @{
     StorageUri =  $StorageUriBlob
     AdministratorLogin =  $SqlAdminUser
     AdministratorLoginPassword =  $SqlAdminPass
-    ResourceGroupName =  $RGName
+    ResourceGroupName =  $ResourceGroupName
 }
 $importRequest = New-AzSqlDatabaseImport @ImportBacPacParams
 do {

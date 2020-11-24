@@ -7,9 +7,9 @@
 $SqlAdminPass = Read-Host -Prompt "Please enter an administrator password:" | ConvertTo-SecureString -AsPlainText -Force 
 $SqlAdminCred = New-Object System.Management.Automation.PSCredential($SqlAdminUser, $SqlAdminPass)
 
-if (-not (Get-AzSqlServer -ResourceGroupName $RGName -ServerName $SqlServerName -ErrorAction SilentlyContinue)) {
+if (-not (Get-AzSqlServer -ResourceGroupName $ResourceGroupName -ServerName $SqlServerName -ErrorAction SilentlyContinue)) {
     $AzSQlParams = @{
-        ResourceGroupName           = $RGName
+        ResourceGroupName           = $ResourceGroupName
         ServerName                  = $SqlServerName
         Location                    = $Location
         SqlAdministratorCredentials = $SqlAdminCred
@@ -34,7 +34,7 @@ else {
 # Create firewall rule for Azure resources
 
 $SqlFWRuleParams = @{
-    ResourceGroupName = $RGName
+    ResourceGroupName = $ResourceGroupName
     ServerName        = $SqlServerName
     AllowAllAzureIPs  = $true
 }

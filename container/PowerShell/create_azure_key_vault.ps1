@@ -4,10 +4,10 @@
 
 . .\container\PowerShell\variables.ps1
 
-if (-not (Get-AzKeyVault -ResourceGroupName $RGName -VaultName $KVName -ErrorAction SilentlyContinue)) {
+if (-not (Get-AzKeyVault -ResourceGroupName $ResourceGroupName -VaultName $KVName -ErrorAction SilentlyContinue)) {
     $AzKVParams = @{
         Name              = $KVName
-        ResourceGroupName = $RGName
+        ResourceGroupName = $ResourceGroupName
         Location          = $Location
     }
     New-AzKeyVault @AzKVParams -
@@ -25,5 +25,5 @@ Set-AzKeyVaultAccessPolicy @SetAzKVAccessPolicy
 # Clean up 
 <#
 . .\container\PowerShell\variables.ps1
-Remove-AzKeyVault -ResourceGroupName $RGName -VaultName $KVName
+Remove-AzKeyVault -ResourceGroupName $ResourceGroupName -VaultName $KVName
 #>

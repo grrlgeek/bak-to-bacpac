@@ -6,7 +6,7 @@
 . .\container\PowerShell\create_setupstorage_function.ps1
 
 $ContainerStorageSetUpParams = @{
-    StorageResourceGroupName = $RGName
+    StorageResourceGroupName = $ResourceGroupName
     StorageAccountName       = $StorageAccountName
     ShareName                = $ShareName
     Location                 = $Location
@@ -18,7 +18,7 @@ $StorageAccountCredentials = New-ContainerStorageSetUp @ContainerStorageSetUpPar
 
 # Storage account key
 
-$SecretValue = (Get-AzStorageAccountKey -ResourceGroupName $RGName -Name $StorageAccountName)[0].Value
+$SecretValue = (Get-AzStorageAccountKey -ResourceGroupName $ResourceGroupName -Name $StorageAccountName)[0].Value
 $SecretValueSecure = ConvertTo-SecureString -String $SecretValue -AsPlainText -Force
 
 $SecretSetParams = @{

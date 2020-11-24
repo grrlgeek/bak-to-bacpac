@@ -6,21 +6,21 @@
 
 $SA_PASSWORD = Read-Host -Prompt "Please enter the SA password:"
 
-$ACRLoginServer = (Get-AzContainerRegistry -ResourceGroupName $RGName -Name $ACRName).LoginServer 
+$ACRLoginServer = (Get-AzContainerRegistry -ResourceGroupName $ResourceGroupName -Name $ACRName).LoginServer 
 $ACRUser = (Get-AzKeyVaultSecret -VaultName $KVName  -Name 'acr-pull-user').SecretValueText 
 $ACRPass = (Get-AzKeyVaultSecret -VaultName $KVName -Name 'acr-pull-pass').SecretValue 
 $ACRCred = New-Object System.Management.Automation.PSCredential ($ACRUser, $ACRPass) 
 $EnvVariables = @{ ACCEPT_EULA = "Y"; SA_PASSWORD = $SA_PASSWORD; MSSQL_PID = "Enterprise"; }
-$StorageAcctKey = (Get-AzStorageAccountKey -ResourceGroupName $RGName -Name $StorageAccountName)[0].Value | ConvertTo-SecureString -AsPlainText -Force 
+$StorageAcctKey = (Get-AzStorageAccountKey -ResourceGroupName $ResourceGroupName -Name $StorageAccountName)[0].Value | ConvertTo-SecureString -AsPlainText -Force 
 $StorageAcctCred = New-Object System.Management.Automation.PSCredential($StorageAccountName, $StorageAcctKey)
 
 
 # Run
 
-if (-not(Get-AzContainerGroup -ResourceGroupName $RGName -Name $ContainerGroupName -ErrorAction SilentlyContinue)) {
+if (-not(Get-AzContainerGroup -ResourceGroupName $ResourceGroupName -Name $ContainerGroupName -ErrorAction SilentlyContinue)) {
     $NewContainerGroupParams = @{
         Name                             = $ContainerGroupName
-        ResourceGroupName                = $RGName
+        ResourceGroupName                = $ResourceGroupName
         Image                            = "$ACRLoginServer/$ACRPath"
         RegistryServerDomain             = $ACRLoginServer
         RegistryCredential               = $ACRCred
@@ -45,6 +45,6 @@ if (-not(Get-AzContainerGroup -ResourceGroupName $RGName -Name $ContainerGroupNa
 <#
 # Clean up 
 Remove-AzContainerGroup `
-    -ResourceGroupName $RGName `
+    -ResourceGroupName $ResourceGroupName `
     -Name $ContainerGroupName
 #>
