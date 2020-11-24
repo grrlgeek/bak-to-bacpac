@@ -19,11 +19,11 @@ $dockertempcreateimage = "$dockertempdir\create_docker_image.sh"
 # If you are on Windows and using WSL use the format /mnt/DRIVELETTER/Directory
 # If you are using Windows use DRIVELETTER:\PathtoDirectory
 
-$localDockerHostDirectory = '/mnt/f/BackupShare'
+$localDockerHostDirectory = 'C:\SqlBackups'
 
 #endregion
 
-#region Azure variables
+#region other variables
 
 # This is the name of the Resource Group - will be created if it does not exist
 $ResourceGroupName = 'sqlcontainers'
@@ -91,3 +91,4 @@ $sqlEdition = 'BusinessCritical'
 # This is the Service Level of the Azure SQL Database
 $sqlSLO = 'BC_Gen5_2'
 
+#endregion
