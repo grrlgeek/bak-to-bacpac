@@ -1,5 +1,5 @@
-#sleep for 20 seconds and let SQL Server start all the way
-sleep 20
+#sleep for 30 seconds and let SQL Server start all the way
+sleep 30
 /opt/mssql-tools/bin/sqlcmd -l 300 -S localhost -U sa -P $SA_PASSWORD -d master -i "/create_procedure_restoreheaderonly.sql"
 /opt/mssql-tools/bin/sqlcmd -l 300 -S localhost -U sa -P $SA_PASSWORD -d master -i "/create_procedure_restoredatabase.sql"
 #run the setup script to create the DB and the schema in the DB
