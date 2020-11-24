@@ -39,7 +39,7 @@ BEGIN
 		EXEC dbo.restoreheaderonly @backuplocation
 
 		-- Build the T-SQL RESTORE statement
-		SET @sql = 'RESTORE DATABASE ' + @dbname + ' FROM DISK = ''' + @backuplocation +  ''' WITH  '
+		SET @sql = 'RESTORE DATABASE [' + @dbname + '] FROM DISK = ''' + @backuplocation +  ''' WITH  '
 
 		SELECT @sql = @sql + char(13) + ' MOVE ''' + LogicalName + ''' TO ''' + @restorelocation + LogicalName + '.' + RIGHT(PhysicalName,CHARINDEX('\',PhysicalName)) + ''','
 		FROM #tblBackupFiles

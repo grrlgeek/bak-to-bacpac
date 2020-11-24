@@ -1,42 +1,65 @@
 # Import .bacpac from File Share to Azure SQL Database
 
-$RGName = 'sqlcontainers'
-$KVName = 'kvsqlcontainers'
-$StorageAcctName = 'customersqlbaks'
-$StorageAcctKey = (Get-AzStorageAccountKey -ResourceGroupName $RGName -Name $StorageAcctName)[0].Value 
-$StorageAcctFileShareName = 'baks'
-$StorageContext = (Get-AzStorageAccount -ResourceGroupName $RGName -Name $StorageAcctName).Context
-$StorageFileShareObj = Get-AzStorageFile -ShareName $StorageAcctFileShareName -Context $StorageContext
-$Filtered = $StorageFileShareObj | Where-Object {$_.name -like '*.bacpac'}
-$FileName = $Filtered.Name
-$SASToken = New-AzStorageAccountSASToken -Service Blob,File,Table,Queue -ResourceType Service,Container,Object -Permission "racwdlup" -Context $StorageContext
-$StorageUriFileShareSAS = "https://$StorageAcctName.file.core.windows.net/$StorageAcctFileShareName/$FileName$SASToken"
-$StorageUriBlob = "https://$StorageAcctName.blob.core.windows.net/$StorageAcctFileShareName/$FileName"
-$StorageUriBlobSAS = "https://$StorageAcctName.blob.core.windows.net/$StorageAcctFileShareName/$FileName$SASToken"
-$SqlServerName = 'customerdbsfrombak'
-$SqlAdminUser = (Get-AzSqlServer -ResourceGroup $RGName -Name $SqlServerName).SqlAdministratorLogin
-$SqlAdminPass =  (Get-AzKeyVaultSecret -VaultName $KVName -Name "$SqlServerName-admin").SecretValue 
-$SQLDB = 'importedbak'
-$sqlEdition = 'BusinessCritical'
-$sqlSLO = 'BC_Gen5_2'
+# Load Variables
 
-#Move file using azcopy 
-azcopy login
-azcopy copy $StorageUriFileShareSAS $StorageUriBlobSAS 
+. .\container\PowerShell\variables.ps1
+
+azcopy login --tenant-id $AZContext.Tenant.Id
+
+$SqlAdminUser = (Get-AzSqlServer -ResourceGroup $RGName -Name $SqlServerName).SqlAdministratorLogin
+$SqlAdminPass = (Get-AzKeyVaultSecret -VaultName $KVName -Name "$SqlServerName-admin").SecretValue
+$StorageAcctKey = (Get-AzStorageAccountKey -ResourceGroupName $RGName -Name $StorageAccountName)[0].Value 
+$StorageContext = (Get-AzStorageAccount -ResourceGroupName $RGName -Name $StorageAccountName).Context
+$StorageFileShareObj = Get-AzStorageFile -ShareName $ShareName -Context $StorageContext
+$Filtered = $StorageFileShareObj | Where-Object { $_.name -like '*.bacpac' }
+foreach ($File in $Filtered) {
+    $FileName = $File.Name
+    $SASToken = New-AzStorageAccountSASToken -Service Blob, File, Table, Queue -ResourceType Service, Container, Object -Permission "racwdlup" -Context $StorageContext
+    $StorageUriFileShareSAS = "https://$StorageAccountName.file.core.windows.net/$ShareName/$FileName$SASToken"
+    $StorageUriBlob = "https://$StorageAccountName.blob.core.windows.net/$ShareName/$FileName"
+    $StorageUriBlobSAS = "https://$StorageAccountName.blob.core.windows.net/$ShareName/$FileName$SASToken"
+
+    azcopy copy $StorageUriFileShareSAS $StorageUriBlobSAS 
+
+    
+Write-Output "Importing bacpac  $FileName ..."
+$Random = Get-Random -Minimum 1 -Maximum 99999
+$ImportBacPacParams = @{
+    DatabaseName =  "$SQLDB-$Random"
+    Edition =  $sqlEdition
+    ServiceObjectiveName =  $sqlSLO
+    DatabaseMaxSizeBytes =  "$(10 * 1024 * 1024 * 1024)"
+    ServerName =  $SqlServerName
+    StorageKeyType =  'StorageAccessKey'
+    StorageKey =  $StorageAcctKey
+    StorageUri =  $StorageUriBlob
+    AdministratorLogin =  $SqlAdminUser
+    AdministratorLoginPassword =  $SqlAdminPass
+    ResourceGroupName =  $RGName
+}
+$importRequest = New-AzSqlDatabaseImport @ImportBacPacParams
+do {
+    $importStatus = Get-AzSqlDatabaseImportExportStatus -OperationStatusLink $importRequest.OperationStatusLink
+    Start-Sleep -s 10
+} while ($importStatus.Status -eq "InProgress")
+}
+
 
 Write-Output "Importing bacpac..."
-$importRequest = New-AzSqlDatabaseImport `
-    -DatabaseName $SQLDB `
-    -Edition $sqlEdition `
-    -ServiceObjectiveName $sqlSLO `
-    -DatabaseMaxSizeBytes "$(10 * 1024 * 1024 * 1024)" `
-    -ServerName $SqlServerName `
-    -StorageKeyType 'StorageAccessKey' `
-    -StorageKey $StorageAcctKey `
-    -StorageUri $StorageUriBlob `
-    -AdministratorLogin $SqlAdminUser `
-    -AdministratorLoginPassword $SqlAdminPass `
-    -ResourceGroupName $RGName 
+$ImportBacPacParams = @{
+    DatabaseName =  $SQLDB
+    Edition =  $sqlEdition
+    ServiceObjectiveName =  $sqlSLO
+    DatabaseMaxSizeBytes =  "$(10 * 1024 * 1024 * 1024)"
+    ServerName =  $SqlServerName
+    StorageKeyType =  'StorageAccessKey'
+    StorageKey =  $StorageAcctKey
+    StorageUri =  $StorageUriBlob
+    AdministratorLogin =  $SqlAdminUser
+    AdministratorLoginPassword =  $SqlAdminPass
+    ResourceGroupName =  $RGName
+}
+$importRequest = New-AzSqlDatabaseImport @ImportBacPacParams
 do {
     $importStatus = Get-AzSqlDatabaseImportExportStatus -OperationStatusLink $importRequest.OperationStatusLink
     Start-Sleep -s 10

@@ -1,48 +1,45 @@
 # Create a new Azure Container Instance group 
 
+# Load Variables
+
+. .\container\PowerShell\variables.ps1
+
 $SA_PASSWORD = Read-Host -Prompt "Please enter the SA password:"
-$RGName = 'sqlcontainers' 
-$KVName = 'kvsqlcontainers'
-$ContainerGroupName = 'aci-sql-bak-bacpac'
-$ACRName = 'acrsqlcontainers'
+
 $ACRLoginServer = (Get-AzContainerRegistry -ResourceGroupName $RGName -Name $ACRName).LoginServer 
 $ACRUser = (Get-AzKeyVaultSecret -VaultName $KVName  -Name 'acr-pull-user').SecretValueText 
 $ACRPass = (Get-AzKeyVaultSecret -VaultName $KVName -Name 'acr-pull-pass').SecretValue 
 $ACRCred = New-Object System.Management.Automation.PSCredential ($ACRUser, $ACRPass) 
-$ACRPath = 'sql/bak-bacpac:latest'
-$EnvVariables = @{ ACCEPT_EULA="Y"; SA_PASSWORD=$SA_PASSWORD; MSSQL_PID="Enterprise";}
-$StorageAcctName = 'customersqlbaks'
-$StorageAcctKey = (Get-AzStorageAccountKey -ResourceGroupName $RGName -Name $StorageAcctName)[0].Value | ConvertTo-SecureString -AsPlainText -Force 
-$StorageAcctCred = New-Object System.Management.Automation.PSCredential($StorageAcctName, $StorageAcctKey)
-$StorageAcctFileShareName = 'baks'
-$VolumeMountPath  = '/mnt/external'
+$EnvVariables = @{ ACCEPT_EULA = "Y"; SA_PASSWORD = $SA_PASSWORD; MSSQL_PID = "Enterprise"; }
+$StorageAcctKey = (Get-AzStorageAccountKey -ResourceGroupName $RGName -Name $StorageAccountName)[0].Value | ConvertTo-SecureString -AsPlainText -Force 
+$StorageAcctCred = New-Object System.Management.Automation.PSCredential($StorageAccountName, $StorageAcctKey)
 
-# Run 
-$CGExists = Get-AzContainerGroup -ResourceGroupName $RGName -Name $ContainerGroupName -ErrorAction SilentlyContinue
-if ($CGExists -eq $null)
-    {
-        New-AzContainerGroup `
-            -Name $ContainerGroupName `
-            -ResourceGroupName $RGName `
-            -Image $ACRLoginServer/$ACRPath  `
-            -RegistryServerDomain $ACRLoginServer `
-            -RegistryCredential $ACRCred `
-            -DnsNameLabel $ContainerGroupName `
-            -IpAddressType Public `
-            -EnvironmentVariable $EnvVariables `
-            -AzureFileVolumeAccountCredential $StorageAcctCred `
-            -AzureFileVolumeShareName $StorageAcctFileShareName `
-            -AzureFileVolumeMountPath $VolumeMountPath `
-            -OsType Linux `
-            -Cpu 2 `
-            -MemoryInGB 4 
 
-        Write-Host "Container group ($ContainerGroupName) created."
+# Run
+
+if (-not(Get-AzContainerGroup -ResourceGroupName $RGName -Name $ContainerGroupName -ErrorAction SilentlyContinue)) {
+    $NewContainerGroupParams = @{
+        Name                             = $ContainerGroupName
+        ResourceGroupName                = $RGName
+        Image                            = "$ACRLoginServer/$ACRPath"
+        RegistryServerDomain             = $ACRLoginServer
+        RegistryCredential               = $ACRCred
+        DnsNameLabel                     = $ContainerGroupName
+        IpAddressType                    = 'Public'
+        EnvironmentVariable              = $EnvVariables
+        AzureFileVolumeAccountCredential = $StorageAcctCred
+        AzureFileVolumeShareName         = $ShareName
+        AzureFileVolumeMountPath         = $VolumeMountPath
+        OsType                           = 'Linux'
+        Cpu                              = 2
+        MemoryInGB                       = 4
     }
-else 
-    {
-        Write-Host "Container group ($ContainerGroupName) exists."
-    }
+    New-AzContainerGroup @NewContainerGroupParams
+
+    Write-Host "Container group ($ContainerGroupName) created."
+}else {
+    Write-Host "Container group ($ContainerGroupName) exists."
+}
 
 
 <#

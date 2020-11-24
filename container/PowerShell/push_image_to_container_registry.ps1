@@ -1,8 +1,8 @@
 # Push the local Docker image to the Azure Container Registry 
 
-$RGName = 'sqlcontainers' 
-$ACRName = 'acrsqlcontainers'
-$ACRPath = 'sql/bak-bacpac:latest'
+# Load Variables
+
+. .\container\PowerShell\variables.ps1
 
 # Log in to registry 
 $ACRNameObj = Get-AzContainerRegistry -ResourceGroupName $RGName -Name $ACRName
