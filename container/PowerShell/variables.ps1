@@ -19,7 +19,7 @@ $dockertempcreateimage = "$dockertempdir\create_docker_image.sh"
 # If you are on Windows and using WSL use the format /mnt/DRIVELETTER/Directory
 # If you are using Windows use DRIVELETTER:\PathtoDirectory
 
-$localDockerHostDirectory = 'C:\SqlBackups'
+$localDockerHostDirectory = 'F:\BackupShare'
 
 #endregion
 
@@ -40,7 +40,7 @@ $ShareName = 'baks'
 
 # This is the name of the Key Vault - It will be created if it does not exist and
 # must be unique across Azure
-$KVName = 'beardkvsqlcontainers'
+$KVName = 'beardkvsqlcontainers1'
 
 # This is the user who will have access to the Key Vault to set and retrieve secrets
 $UserForKeyVault = 'mrrobsewell_gmail.com#EXT#@mrrobsewellgmail.onmicrosoft.com'
@@ -77,7 +77,7 @@ $GetAzSecretParams = @{
 $SqlAdminPwd = Get-AzKeyVaultSecret @GetAzSecretParams
 
 if(-not $SqlAdminCred){
-    $SqlServerAdminCred = Get-Credential -Message "Enter a password for the the admin user for the Azure SQL Database"
+    $SqlServerAdminCred = Get-Credential -Message "Enter a username and password for the the admin user (Dont use sa) for the Azure SQL Database"
 } else{
     $SqlServerAdminCred = New-Object System.Management.Automation.PSCredential($SqlAdminUser, $SqlAdminPwd)
 }
