@@ -21,7 +21,7 @@ if (-not (Get-AzSqlServer -ResourceGroupName $ResourceGroupName -ServerName $Sql
         Location                    = $Location
         SqlAdministratorCredentials = $SqlServerAdminCred
     }
-    New-AzSqlServer @$AzSQLServerParams
+    New-AzSqlServer @AzSQlParams
 
     Write-Host "SQL server ($SqlServerName) created."
 }
@@ -97,6 +97,8 @@ foreach ($File in $Filtered) {
     } while ($importStatus.Status -eq "InProgress")
     #endregion
 }
+#endregion
+
 
 <#
 Remove-AzKeyVaultSecret `
