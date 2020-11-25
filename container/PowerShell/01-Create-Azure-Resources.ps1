@@ -198,7 +198,7 @@ $SetAzKVSecret = @{
 }
 Set-AzKeyVaultSecret @SetAzKVSecret
 
-Write-Host "Secret ($SecretName) created or updated"
+Write-Host "Secret ($AcrUserSecretName) created or updated"
 
 # Container registry admin password 
 
@@ -212,7 +212,7 @@ $SetAzKVSecretParams = @{
 }
 
 Set-AzKeyVaultSecret @SetAzKVSecretParams
-Write-Host "Secret ($SecretName) created or updated."
+Write-Host "Secret ($AcrPassSecretName) created or updated."
 
 
 #endregion
