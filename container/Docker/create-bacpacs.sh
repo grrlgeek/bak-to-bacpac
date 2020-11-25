@@ -1,8 +1,8 @@
 # loop until SQL is ready
-echo "SELECT * FROM SYS.DATABASES" | dd of=testsqlconnection.sql
+
 for i in {1..60};
 do
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $SApassword -d master -i testsqlconnection.sql
+    /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $SA_PASSWORD  -Q "SELECT Name FROM SYS.DATABASES"
     if [ $? -eq 0 ]
     then
         echo "sql server ready"
@@ -12,7 +12,6 @@ do
         sleep 1
     fi
 done
-rm testsqlconnection.sql
 
 /opt/mssql-tools/bin/sqlcmd -l 300 -S localhost -U sa -P $SA_PASSWORD -d master -i "/create_procedure_restoreheaderonly.sql"
 /opt/mssql-tools/bin/sqlcmd -l 300 -S localhost -U sa -P $SA_PASSWORD -d master -i "/create_procedure_restoredatabase.sql"
