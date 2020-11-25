@@ -64,6 +64,24 @@ $SqlServerName = 'beardsqldbsfrombak'
 # This is the name of the Admin user for the Azure SQL Database
 $SqlAdminUser = 'sql-admin'
 
+# This is the password for the admin user for the Azure SQL Database
+
+$SqlServerAdminPwdSecretName = "$SqlServerName-admin"
+
+$GetAzSecretParams = @{
+    VaultName   = $KVName 
+    Name        = $SqlServerAdminPwdSecretName 
+    ErrorAction = 'SilentlyContinue'
+}
+
+$SqlAdminPwd = Get-AzKeyVaultSecret @GetAzSecretParams
+
+if(-not $SqlAdminCred){
+    $SqlServerAdminCred = Get-Credential -Message "Enter a password for the the admin user for the Azure SQL Database"
+} else{
+    $SqlServerAdminCred = New-Object System.Management.Automation.PSCredential($SqlAdminUser, $SqlAdminPwd)
+}
+
 # This is the full path to the container and the tag
 # folder/image:tag
 $ACRPath = 'sql/bak-bacpac:latest'
