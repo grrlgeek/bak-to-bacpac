@@ -35,7 +35,6 @@ import the bacpacs from Azure Storage and create the databases.
 
 It will also create a firewall rule and store or update the sql server admin password in Key Vault
 
-
 ## Future Enhancements
 
 This code is complete but several enhancements could be made in the future to improve it, including:
