@@ -100,9 +100,6 @@ $ContainerGroupName = 'aci-sql-bak-bacpac'
 # If you do you will also need to change a lot of the docker creation scripts
 $VolumeMountPath  = '/mnt/external'
 
-# This is the name the database will be restored as - I would like to make this dynamic
-$SQLDB = 'importedbak'
-
 # This is the edition of the Azure SQL Server
 $sqlEdition = 'BusinessCritical'
 

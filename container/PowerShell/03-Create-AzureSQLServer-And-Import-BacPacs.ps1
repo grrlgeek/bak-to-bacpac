@@ -76,9 +76,9 @@ foreach ($File in $Filtered) {
     
     #region Import bacpac
     Write-Output "Importing bacpac  $FileName ..."
-    $Random = Get-Random -Minimum 1 -Maximum 99999
+    $dbName = $FileName.Split('.')[0]
     $ImportBacPacParams = @{
-        DatabaseName               = "$SQLDB-$Random"
+        DatabaseName               = $dbName
         Edition                    = $sqlEdition
         ServiceObjectiveName       = $sqlSLO
         DatabaseMaxSizeBytes       = "$(10 * 1024 * 1024 * 1024)"
