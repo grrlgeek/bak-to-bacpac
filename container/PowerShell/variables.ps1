@@ -25,6 +25,10 @@ $localDockerHostDirectory = 'F:\BackupShare'
 
 #region other variables
 
+# This is the name of the Azure Subscription
+
+$AzureSubscriptionName = ''
+
 # This is the name of the Resource Group - will be created if it does not exist
 $ResourceGroupName = 'sqlcontainers'
 

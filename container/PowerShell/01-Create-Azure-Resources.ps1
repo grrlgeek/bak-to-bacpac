@@ -28,7 +28,7 @@ Get-AzSubscription
 
 # Set the subscription using the subscription name
 
-$AZContext = Set-AzContext -SubscriptionName 'Microsoft Azure Sponsorship'
+$AZContext = Set-AzContext -SubscriptionName $AzureSubscriptionName
 $AZContext.Subscription.Name
 
 #endregion
