@@ -19,7 +19,7 @@ foreach ($File in $Filtered) {
     $StorageUriBlob = "https://$StorageAccountName.blob.core.windows.net/$ShareName/$FileName"
     $StorageUriBlobSAS = "https://$StorageAccountName.blob.core.windows.net/$ShareName/$FileName$SASToken"
 
-    azcopy copy $StorageUriFileShareSAS $StorageUriBlobSAS 
+azcopy copy $StorageUriFileShareSAS $StorageUriBlobSAS 
 
     
 Write-Output "Importing bacpac  $FileName ..."

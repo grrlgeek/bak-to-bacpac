@@ -10,7 +10,7 @@ if (-not (Get-AzKeyVault -ResourceGroupName $RGName -VaultName $KVName -ErrorAct
         ResourceGroupName = $RGName
         Location          = $Location
     }
-    New-AzKeyVault @AzKVParams -
+    New-AzKeyVault @AzKVParams 
     Write-Host "Key Vault ($KVName) created."
 } else {
     Write-Host "Key Vault ($KVName) exists."

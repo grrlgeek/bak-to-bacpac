@@ -3,11 +3,11 @@
 Connect-AzAccount
 
 #Get available subscriptions
-Get-AzSubscription
+# Get-AzSubscription
 
 # Set the subscription using the subscription name
 
-$AZContext = Set-AzContext -SubscriptionName 'Microsoft Azure Sponsorship'
+$AZContext = Set-AzContext -SubscriptionName $SubscriptionName
 $AZContext.Subscription.Name
 
 # Load Variables
