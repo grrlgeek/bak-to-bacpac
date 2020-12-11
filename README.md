@@ -16,33 +16,30 @@ If you would like a .bak file to test with, go to [AdventureWorks sample databas
 
 ## Steps
 
-These steps assume you have no resources created in Azure. If you have a resource group and a key vault, for example, replace the parameters in the following scripts with your values.
+These steps assume you have no resources created in Azure. If you have a resource group and a key vault, for example, replace the parameters in the [variables.ps1](container/PowerShell/variables.ps1) with your values.
 
-Start by filling in the [variables.ps1](PowerShell/variables.ps1) file with the names that you want to use for the resources that will be created.
+Start by filling in the [variables.ps1](container/PowerShell/variables.ps1) file with the names that you want to use for the resources that will be created.
 
+There are 4 scripts that will perform the actions using the values in the variables file.
 
+- [00-Create-Local-Docker-Container.ps1](container\PowerShell\00-Create-Local-Docker-Container.ps1) This will build the image with all the required files and scripts. It also has the script to run the image locally and process bak files in the localDockerHostDirectory
 
-| Step                                          | File                                                                                                     |
-|---------                                      |--------                                                                                                  |
-|Create Dockerfile locally                      | [Dockerfile](container/Docker/Dockerfile)                                                                          |
-|Create image                                   | [create_docker_image.sh](container/Docker/create_docker_image.sh)                                                  |
-|Create container locally                       | [local_docker_run_command.sh](container/Docker/local_docker_run_command.sh)                                        |
-|Create Azure Resource Group                    | [create_azure_resource_group.ps1](container/PowerShell/create_azure_resource_group.ps1)                            |
-|Create Azure Key Vault                         | [create_azure_key_vault.ps1](container/PowerShell/create_azure_key_vault.ps1)                                      |
-|Create Azure Storage function                  | [create_setupstorage_function.ps1](container/PowerShell/create_setupstorage_function.ps1)                          |
-|Create Azure Storage File Share                | [create_azure_storage_account_file_share.ps1](container/PowerShell/create_azure_storage_account_file_share.ps1)    |
-|Create Azure Container Registry                | [create_azure_container_registry.ps1](container/PowerShell/create_azure_container_registry.ps1)                    |
-|Create Azure SQL server                        | [create_azure_sql_server.ps1](container/PowerShell/create_azure_sql_server.ps1)                                    |
-|Push image to Azure Container Registry         | [push_image_to_azure_container_registry.ps1](container/PowerShell/push_image_to_azure_container_registry.ps1)      |
-|Upload .bak to File Share                      |[upload_baks_to_file_share.ps1](container/PowerShell/upload_baks_to_file_share.ps1)|                                                                                                          |
-|Create Azure Container Instance                | [deploy_container.ps1](container/PowerShell/deploy_container.ps1)                                                  |
-|Import .bacpac into SQL Database               | [import_bacpac_sql_database.ps1](container/PowerShell/import_bacpac_sql_database.ps1)                              |
+- [01-Create-Azure-Resources.ps1](container\PowerShell\01-Create-Azure-Resources.ps1) This will create the Azure Resources using the values in the variables file.
+
+- [02-Deploy-Container-And-Process-baks.ps1](container\PowerShell\02-Deploy-Container-And-Process-baks.ps1) This will deploy the image to an Azure Container Instance Group,
+which will process the backups in the storage account and create the bacpacs.
+It also has the code to upload the files from the onprem backup store to the fileshare for demos.
+
+- [03-Create-AzureSQLServer-And-Import-BacPacs.ps1](container\PowerShell\03-Create-AzureSQLServer-And-Import-BacPacs.ps1) This script will create the Azure SQL Server if it does not exist and
+import the bacpacs from Azure Storage and create the databases.
+
+It will also create a firewall rule and store or update the sql server admin password in Key Vault
 
 ## Future Enhancements
 
 This code is complete but several enhancements could be made in the future to improve it, including:
 
-* Create an Azure Function to run the scripts when a .bak lands in the File Share.
-* Modify create_azure_sql_server.ps1 to create a Network Security Group and use that, rather than "Allow all IPS".
+* Create an Azure Function to run the scripts when a .bak lands in the File Share. There does not appear to be a FileWatcher event handler available for Azure File Share which means options could be attach the share to a VM and then use Windows to listen for the file, or poll for new files.
+* Modify 01-Create-Azure-Resources.ps1 to create a Network Security Group and use that, rather than "Allow all IPS".
 * Detach database after .bacpac is created.
-* Build in monitoring to determine when the process is finished and send a notification, using something like Write-Host.
+* Build in monitoring to determine when the process is finished and send a notification.
